@@ -1,0 +1,23 @@
+html,
+body {
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* styles/MyComponent.module.css */
+@media print {
+  .hide-in-print {
+    display: none;
+  }
+}

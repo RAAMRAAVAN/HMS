@@ -1,0 +1,19 @@
+/* App.css */
+@media print {
+    .hide-in-print {
+      display: none;
+    }
+  }
+  
+/* index.css or App.css */
+.ck-content table {
+  width: 100%;
+}
+
+.ck-content table th,
+.ck-content table td {
+  min-width: 50px; /* Minimum width for cells */
+  min-height: 30px; /* Minimum height for cells */
+  padding: 10px; /* Padding for better appearance */
+  box-sizing: border-box; /* Include padding in total width/height */
+}
