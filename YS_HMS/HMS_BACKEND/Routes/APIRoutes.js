@@ -15,9 +15,12 @@ const { fetchIPDMoneyReceipts, fetchIPDBillDetails, fetchIPDBillDet, fetchIPDMon
 const { fetchIPDDoctorVisitList, getVisitListDetails, UpdateVisitDetails, deleteDoctorVisitEntries, getDoctorList, AddDoctorVisit, CreateDoctorVisit, getDoctorVisitPermissions } = require('../controllers/ipdDoctorVisit');
 const { fetchOtherServicesList, getServiceListDetails, UpdateServiceDetails, getServiceList, AddService, deleteOtherServiceEntries, CreateOtherService } = require('../controllers/ipdOtherServices');
 const { filterServiceMaster, createCaseEntry, fetchCaseEntry, fetchCaseEntryDetails, deleteIPDCaseEntry, IPDCaseEntryDetails } = require('../controllers/CaseEntryController');
+const { getCollection } = require('../controllers/collectionController');
 
 // User Details
 router.post('/fetchUserDetails', fetchUserDetails)
+
+router.post('/getCollection', getCollection)
 
 router.post('/get-FrontdeskCollection', frontdeskController.getFrontdeskCollection)
 router.post('/get-FrontdeskBills', frontdeskController.getFrontdeskBills)

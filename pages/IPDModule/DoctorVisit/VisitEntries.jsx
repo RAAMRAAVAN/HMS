@@ -25,7 +25,7 @@ export const VisitEntries = (props) => {
   const getVisitListDetails = async() => {
     setIPDDoctorVisitListDetails([]);
     try{
-        let result = await axios.post('http://192.168.1.32:5000/getVisitListDetails', {ReceiptID: ReceiptID});
+        let result = await axios.post('http://localhost:5000/getVisitListDetails', {ReceiptID: ReceiptID});
         console.log(result.data.IPDDoctorVisitListDetails)
         setIPDDoctorVisitListDetails(result.data.IPDDoctorVisitListDetails)
     }catch (err){
@@ -35,7 +35,7 @@ export const VisitEntries = (props) => {
 
   const deleteDoctorVisitEntries = async (Act, Del) => {
     try{
-      let result = await axios.post('http://192.168.1.32:5000/deleteDoctorVisitEntries', {ReceiptID: ReceiptID, ActiveStatus:Act, DeleteStatus: Del});
+      let result = await axios.post('http://localhost:5000/deleteDoctorVisitEntries', {ReceiptID: ReceiptID, ActiveStatus:Act, DeleteStatus: Del});
       
       getVisitListDetails();
     } catch (err){

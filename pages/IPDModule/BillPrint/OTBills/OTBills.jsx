@@ -22,7 +22,7 @@ export const OTBills = (props) => {
   );
   const getOTBills = async (data) => {
     try {
-      const response = await axios.post("http://192.168.1.32:5000/fetchOTBills", {
+      const response = await axios.post("http://localhost:5000/fetchOTBills", {
         IPDID: data,
       });
       console.log("OT BIlls", response.data.OTBills);

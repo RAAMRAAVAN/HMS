@@ -30,11 +30,12 @@ import {
 import { AddIPDMoneyReceipt } from "./AddIPDMoneyReceipt";
 import { UpdateIPDMoneyReceipt } from "./UpdateIPDMoneyReceipt";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIPDNo } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
+import { selectIPDNo, selectselectedPatient } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
 
 export const MoneyReceipt = (props) => {
   const dispatch = useDispatch();
-  const IPDNo = useSelector(selectIPDNo)
+  const {patientDetails} = props;
+  const IPDNo = useSelector(selectselectedPatient).IPAID
   const [moneyReceiptList, setMoneyReceiptList] = useState([]);
   const [submissionSuccessfulAlert, setsubmissionSuccessfulAlert] =
     useState(false);
@@ -55,7 +56,7 @@ export const MoneyReceipt = (props) => {
   const fetchIPDMoneyReceipts = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDMoneyReceipts",
+        "http://localhost:5000/fetchIPDMoneyReceipts",
         {
           IPDID: input,
         }
@@ -69,7 +70,7 @@ export const MoneyReceipt = (props) => {
   const deleteIPDMoneyReceipt = async (ReceiptID) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/deleteIPDMoneyReceipt",
+        "http://localhost:5000/deleteIPDMoneyReceipt",
         { ReceiptID: ReceiptID }
       );
       if (response.data.Status === true) {
@@ -89,8 +90,8 @@ export const MoneyReceipt = (props) => {
   }, [IPDNo, open, updateOpen]);
   return (
     <>
-      <AddIPDMoneyReceipt setOpen={setOpen} open={open} IPDID={IPDNo}/>
-      <UpdateIPDMoneyReceipt setUpdateOpen={setUpdateOpen} updateOpen={updateOpen} IPDNo={IPDNo} ReceiptID={receiptID}/>
+      <AddIPDMoneyReceipt setOpen={setOpen} open={open} IPDID={IPDNo} patientDetails={patientDetails}/>
+      <UpdateIPDMoneyReceipt setUpdateOpen={setUpdateOpen} updateOpen={updateOpen} IPDNo={IPDNo} ReceiptID={receiptID} patientDetails={patientDetails}/>
       <Box display="flex" width="90vw" flexDirection="column">
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h6">
@@ -118,7 +119,7 @@ export const MoneyReceipt = (props) => {
             )} */}
           </Typography>
 
-          <Button onClick={handleOpen} variant="outlined">Add</Button>
+          <Button onClick={handleOpen} variant="outlined" disabled={patientDetails.Discharge==="Y"?true: false}>Add</Button>
         </Box>
 
         <Grid container>
@@ -385,6 +386,7 @@ export const MoneyReceipt = (props) => {
                   size="small"
                   style={{ padding: "0", margin: "0" }}
                   onClick={() => handleUpdateOpen(receipt.ReceiptID)}
+                  disabled={patientDetails.Discharge==="Y"?true: false}
                 >
                   <EditNote
                     size="small"
@@ -402,6 +404,7 @@ export const MoneyReceipt = (props) => {
                   size="small"
                   style={{ padding: "0", margin: "0" }}
                   onClick={() => deleteIPDMoneyReceipt(receipt.ReceiptID)}
+                  disabled={patientDetails.Discharge==="Y"?true: false}
                 >
                   <Delete
                     size="small"

@@ -63,7 +63,7 @@ export const TodayCollection = () => {
   useEffect(() => {
     const fetchFrontDesk = async () => {
       try {
-        const response = await axios.post('http://192.168.1.32:5000/get-FrontdeskCollection', {fromDate: new Date().toISOString().split('T')[0], toDate: new Date().toISOString().split('T')[0]});
+        const response = await axios.post('http://localhost:5000/get-FrontdeskCollection', {fromDate: new Date().toISOString().split('T')[0], toDate: new Date().toISOString().split('T')[0]});
         // console.log("total",response.data.find(item => item.MOD === null).TotalRate);
         if(response!=[]){
           setFrontDeskData(response.data); // Update state with the fetched data
@@ -83,7 +83,7 @@ export const TodayCollection = () => {
     };
     const fetchLAB = async () => {
       try {
-        const response = await axios.post('http://192.168.1.32:5000/get-PathologyCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate});
+        const response = await axios.post('http://localhost:5000/get-PathologyCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate});
         if(response!=[]){
         setLABData(response.data); // Update state with the fetched data
         setLABTotal(response.data.find(item => item.MOD === null)?response.data.find(item => item.MOD === null).TotalRate: 0)
@@ -102,7 +102,7 @@ export const TodayCollection = () => {
 
     const fetchIPD = async () => {
       try {
-        const response = await axios.post('http://192.168.1.32:5000/get-IPDCollection', {fromDate: new Date().toISOString().split('T')[0], toDate: new Date().toISOString().split('T')[0]});
+        const response = await axios.post('http://localhost:5000/get-IPDCollection', {fromDate: new Date().toISOString().split('T')[0], toDate: new Date().toISOString().split('T')[0]});
         // console.log("total",response.data.find(item => item.MOD === null).TotalRate);
         if(response!=[]){
           setIPDData(response.data); // Update state with the fetched data
@@ -123,7 +123,7 @@ export const TodayCollection = () => {
 
     const fetchIPDLAB = async () => {
       try {
-        const response = await axios.post('http://192.168.1.32:5000/get-PathologyIPDCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate});
+        const response = await axios.post('http://localhost:5000/get-PathologyIPDCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate});
         if(response!=null){
           setLABIPD(response.data[0].TotalRate!=null?response.data[0].TotalRate:0); // Update state with the fetched data
           console.log(response.data[0].TotalRate!=null?response.data[0].TotalRate:0)
@@ -139,7 +139,7 @@ export const TodayCollection = () => {
 
     const fetchCaffee = async () => {
       try {
-        const response = await axios.post('http://192.168.1.32:5000/get-caffeeCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate});
+        const response = await axios.post('http://localhost:5000/get-caffeeCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate});
         console.log(response);
         if(response!=[]){
         setCaffeteriaData(response.data)}
@@ -152,7 +152,7 @@ export const TodayCollection = () => {
 
     const fetchPharmacy = async () => {
       try {
-        const response = await axios.post('http://192.168.1.32:5000/get-pharmacyCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate});
+        const response = await axios.post('http://localhost:5000/get-pharmacyCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate});
         console.log(response);
         if(response!=[]){
           setPharmacyData(response.data)

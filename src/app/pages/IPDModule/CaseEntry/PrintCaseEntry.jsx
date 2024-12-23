@@ -29,7 +29,7 @@ export const PrintCaseEntry = () => {
     console.log("IPD", input);
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchCaseEntry",
+        "http://localhost:5000/fetchCaseEntry",
         {
           ReceiptID: input,
         }
@@ -46,7 +46,7 @@ export const PrintCaseEntry = () => {
     console.log("IPD", input);
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchCaseEntryDetails",
+        "http://localhost:5000/fetchCaseEntryDetails",
         {
           CaseID: input,
         }

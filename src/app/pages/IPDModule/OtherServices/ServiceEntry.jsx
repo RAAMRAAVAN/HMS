@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 
 export const ServiceEntry = (props) => {
   let [AID, setAID] = useState(props.AID);
+  const {patientDetails} = props;
   let [Rate, setRate] = useState(props.Rate);
   let [Qty, setQty] = useState(props.Qty);
   let [Discount, setDiscount] = useState(props.Discount);
@@ -24,7 +25,7 @@ export const ServiceEntry = (props) => {
   const UpdateServiceDetails = async(A, D) => {
     // alert("Update", {AID: AID,ActiveStatus: ActiveStatus, DeleteStatus: DeleteStatus, Qty: Qty, Discount: Discount, Amount: Amount, Rate: Rate, NetAmount: NetAmount,User: "1"});
     try{
-      let result = await axios.post('http://192.168.1.32:5000/UpdateServiceDetails', {AID: AID, OSID: props.OSID,ActiveStatus: A, DeleteStatus: D, Qty: Qty, Discount: Discount, Amount: Amount, Rate: Rate, NetAmount: NetAmount,User: "1"})
+      let result = await axios.post('http://localhost:5000/UpdateServiceDetails', {AID: AID, OSID: props.OSID,ActiveStatus: A, DeleteStatus: D, Qty: Qty, Discount: Discount, Amount: Amount, Rate: Rate, NetAmount: NetAmount,User: "1"})
     } catch (err) {
       console.log(err);
     } 
@@ -177,6 +178,7 @@ export const ServiceEntry = (props) => {
             size="small"
             style={{ padding: "0", margin: "0", display:"none" }}
               onClick={() => handleUpdateOpen(receipt.ReceiptID)}
+              disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <EditNote
               size="small"
@@ -194,6 +196,7 @@ export const ServiceEntry = (props) => {
             size="small"
             style={{ padding: "0", margin: "0" }}
             onClick={()=>{setActiveStatus("N");setDeleteStatus("Y"); UpdateServiceDetails("N", "Y");}}
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <Delete
               size="small"
@@ -211,6 +214,7 @@ export const ServiceEntry = (props) => {
             size="small"
             style={{ padding: "0", margin: "0"}}
             onClick={()=>{setActiveStatus("Y");setDeleteStatus("N"); UpdateServiceDetails("Y", "N")}}
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <Restore
               size="small"
@@ -227,7 +231,7 @@ export const ServiceEntry = (props) => {
             aria-label="delete"
             size="small"
             style={{ padding: "0", margin: "0" }}
-              
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <SystemUpdateAlt
               size="small"

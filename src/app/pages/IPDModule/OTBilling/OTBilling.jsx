@@ -8,7 +8,7 @@ export const OTBilling = () => {
     const [DoctorList, setDoctorList] = useState([]);
     const fetchDoctorList = async() => {
         try{
-            let result = axios.get("http://192.168.1.32:5000/getDoctorList");
+            let result = axios.get("http://localhost:5000/getDoctorList");
             setDoctorList((await result).data.DoctorList)
         }catch(err){
             alert(err);

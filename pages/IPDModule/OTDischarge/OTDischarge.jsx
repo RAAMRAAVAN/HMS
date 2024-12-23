@@ -16,7 +16,7 @@ export const OTDischarge = (props) => {
   const fetchOtDischarge = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchOtDischarge",
+        "http://localhost:5000/fetchOtDischarge",
         {
           IPDNo: input,
         }

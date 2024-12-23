@@ -10,16 +10,18 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { fetchbedStatus } from "../../redux";
 import { FinanceCompany, genderList, maritialStatusList, relationList, relegionList, titleList } from "../../Const/Const";
 import { setFinanceCompanyValue, setGenderValue, setMaritialStatusValue, setRelationValue, setRelegionValue, setTitleValue } from "./SelectValues";
 import { getBedStatusAsync, selectBedDetails, selectWardDetails } from "@/src/lib/features/bedStatus/bedStatusSlice";
-import { selectIPDNo } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
+import { selectfetch, selectIPDNo, selectselectedPatient, updateFetch } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
 
 
 export const IPDAdmission = (props) => {
+
+  const {patientDetails} = props;
   const dispatch = useDispatch();
   const bedDetails = useSelector(selectBedDetails);
   console.log("bedDetails=", bedDetails);
@@ -29,7 +31,10 @@ export const IPDAdmission = (props) => {
   const [loading, setLoading] = useState("loading");
   // const [DoctorList, setDoctorList] = useState([]);
   const [fetchedPatient, setFetchedPatient] = useState({});
-  const IPDNo = useSelector(selectIPDNo)
+  // const IPDNo = useSelector(selectselectedPatient.IPAID);
+  const IPDNo = useSelector(selectselectedPatient).IPAID;
+  const fetch = useSelector(selectfetch);
+  const hasFetchedAdmissionDetails = useRef(false);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [time, setTime] = useState(new Date().toTimeString().split(" ")[0]);
   const [opdPatient, setOpdPatient] = useState(true);
@@ -176,7 +181,7 @@ export const IPDAdmission = (props) => {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/admission_resources"
+        "http://localhost:5000/admission_resources"
       );
       console.log(response);
       setOccupationList(response.data.occupations);
@@ -197,7 +202,7 @@ export const IPDAdmission = (props) => {
   const getFilteredPatients = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/filtered_patient",
+        "http://localhost:5000/filtered_patient",
         {
           like_name: input,
         }
@@ -211,7 +216,7 @@ export const IPDAdmission = (props) => {
   const updateIPDAdmission = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/update-ipd-details", input
+        "http://localhost:5000/update-ipd-details", input
       );
       console.log("POST Result", response);
       if (response.data.UpdateStatus.rowsAffected[0] >= 1)
@@ -222,66 +227,57 @@ export const IPDAdmission = (props) => {
       console.log(error);
     }
   };
-  const getIPDAdmissionDetails = async (input) => {
-    try {
-      const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDPatientDetails",
-        {
-          IPDNo: input,
-        }
-      );
-      console.log("Patient Found = ", response.data[0])
-      setDate(new Date(response.data[0].Date).toISOString().split("T")[0])
-      console.log("Date=", new Date(response.data[0].Date).toISOString().split("T")[0])
-      setTime(new Date(response.data[0].Time).toISOString().split("T")[1].split("Z")[0])
-      setTitle(setTitleValue(response.data[0].TitelID))
-      // setIpdNo(response.data[0].IPDNo)
-      setPatientName(response.data[0].PatientName)
-      setHrno(response.data[0].HRNo)
-      setOpdNo(response.data[0].OPDNo)
-      setYear(response.data[0].Year)
-      setMonth(response.data[0].Month)
-      setDays(response.data[0].Days)
-      setGender(setGenderValue(response.data[0].Gender))
+  const setIPDAdmissionParameters = () => {
+    if(Object.keys(patientDetails).length > 0){
+      setDate(new Date(patientDetails.Date).toISOString().split("T")[0])
+      // console.log("Date=", new Date(patientDetails.Date).toISOString().split("T")[0])
+      setTime(new Date(patientDetails.Time).toISOString().split("T")[1].split("Z")[0])
+      setTitle(setTitleValue(patientDetails.TitelID))
+      // setIpdNo(patientDetails.IPDNo)
+      setPatientName(patientDetails.PatientName)
+      setHrno(patientDetails.HRNo)
+      setOpdNo(patientDetails.OPDNo)
+      setYear(patientDetails.Year)
+      setMonth(patientDetails.Month)
+      setDays(patientDetails.Days)
+      setGender(setGenderValue(patientDetails.Gender))
       // setOccupation()
-      setAddress(response.data[0].Address)
-      setPo(response.data[0].PO)
-      setPs(response.data[0].PS)
-      // setDistrict(response.data[0].District)
+      setAddress(patientDetails.Address)
+      setPo(patientDetails.PO)
+      setPs(patientDetails.PS)
+      // setDistrict(patientDetails.District)
       setDistrict({
-        AID: response.data[0].AID,
-        CountryId: response.data[0].CountryId,
-        DID: response.data[0].DID,
-        DistrictName: response.data[0].DistrictName,
-        StateId: response.data[0].StateId,
-        StateName: response.data[0].StateName,
+        AID: patientDetails.AID,
+        CountryId: patientDetails.CountryId,
+        DID: patientDetails.DID,
+        DistrictName: patientDetails.DistrictName,
+        StateId: patientDetails.StateId,
+        StateName: patientDetails.StateName,
       })
-      setState(response.data[0].StateName)
-      setPinCode(response.data[0].Pincode)
-      setRelegion(setRelegionValue(response.data[0].ReligionID))
-      setInsurance(response.data[0].In_Insurance === 'N' ? false : true)
-      setInsuranceId(response.data[0].InsuranceID)
-      setFinanceCompany(setFinanceCompanyValue(response.data[0].CompanyID))
-      setOccupation({ OID: response.data[0].OccupationID, OccupationName: response.data[0].OccupationName })
-      // console.log("Occupation",{OID: response.data[0].OccupationID, OccupationName: response.data[0].OccupationName})
-      setRelation(setRelationValue(response.data[0].RelationID))
-      setRelationName(response.data[0].RelationName)
-      setPhoneNo(response.data[0].PhoneNo)
-      setMaritialStatus(setMaritialStatusValue(response.data[0].MaritalStatus))
-      setWardName({ WardId: response.data[0].WardID, WardName: response.data[0].WardName })
-      setBedNo(response.data[0].BedNo)
+      setState(patientDetails.StateName)
+      setPinCode(patientDetails.Pincode)
+      setRelegion(setRelegionValue(patientDetails.ReligionID))
+      setInsurance(patientDetails.In_Insurance === 'N' ? false : true)
+      setInsuranceId(patientDetails.InsuranceID)
+      setFinanceCompany(setFinanceCompanyValue(patientDetails.CompanyID))
+      setOccupation({ OID: patientDetails.OccupationID, OccupationName: patientDetails.OccupationName })
+      // console.log("Occupation",{OID: patientDetails.OccupationID, OccupationName: patientDetails.OccupationName})
+      setRelation(setRelationValue(patientDetails.RelationID))
+      setRelationName(patientDetails.RelationName)
+      setPhoneNo(patientDetails.PhoneNo)
+      setMaritialStatus(setMaritialStatusValue(patientDetails.MaritalStatus))
+      setWardName({ WardId: patientDetails.WardID, WardName: patientDetails.WardName })
+      setBedNo(patientDetails.BedNo)
       getAdmissionResources();
-      setUnderDr({AID: response.data[0].AID, DrId: response.data[0].UnderDr, DoctorName: response.data[0].DoctorName})
-      setLoading("Found_User");
-    } catch (error) {
-      console.log(error);
-    }
+      setUnderDr({AID: patientDetails.AID, DrId: patientDetails.UnderDr, DoctorName: patientDetails.DoctorName})
+      setLoading("Found_User");}
   }
   useEffect(() => {
-    if (IPDNo != null) {
-      getIPDAdmissionDetails(IPDNo);
-    }
-  }, [IPDNo]);
+    
+    if(Object.keys(patientDetails).length > 0)
+      {console.log("Patient details=", patientDetails);
+        setIPDAdmissionParameters();}
+  }, [patientDetails]);
 
   useEffect(() => {
     if (selectedPatient != null) {
@@ -1286,6 +1282,7 @@ export const IPDAdmission = (props) => {
             variant="contained"
             color="success"
             onClick={handleSave}
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             Update
           </Button>

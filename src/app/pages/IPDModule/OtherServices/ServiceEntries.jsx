@@ -8,6 +8,7 @@ import { NewServiceEntry} from "./NewServiceEntry";
 export const ServiceEntries = (props) => {
   //   const { ReceiptID } = props;
   let [OSID, setOSID] = useState(props.ReceiptDetails.OSID);
+  const {patientDetails} = props;
   console.log("OSID=", OSID)
   const [IPDDoctorVisitListDetails, setIPDDoctorVisitListDetails] = useState([]);
   let [ReceiptDate, setReceiptDate] = useState(new Date(props.ReceiptDetails.Date)
@@ -26,7 +27,7 @@ export const ServiceEntries = (props) => {
   const getServiceEntriesDetails = async() => {
     setIPDDoctorVisitListDetails([]);
     try{
-        let result = await axios.post('http://192.168.1.32:5000/getServiceListDetails', {OSID: OSID});
+        let result = await axios.post('http://localhost:5000/getServiceListDetails', {OSID: OSID});
         console.log(result.data.IPDDoctorVisitListDetails)
         setIPDDoctorVisitListDetails(result.data.IPDDoctorVisitListDetails)
     }catch (err){
@@ -36,7 +37,7 @@ export const ServiceEntries = (props) => {
 
   const deleteOtherServiceEntries = async (Act, Del) => {
     try{
-      let result = await axios.post('http://192.168.1.32:5000/deleteOtherServiceEntries', {OSID: OSID, ActiveStatus:Act, DeleteStatus: Del});
+      let result = await axios.post('http://localhost:5000/deleteOtherServiceEntries', {OSID: OSID, ActiveStatus:Act, DeleteStatus: Del});
       
       getServiceEntriesDetails();
     } catch (err){
@@ -248,8 +249,8 @@ export const ServiceEntries = (props) => {
           </IconButton> */}
         </Grid>
       </Grid>
-      {IPDDoctorVisitListDetails.map((entry, index) => {return(<ServiceEntry AID={entry.AID} OSID={OSID} ReceiptCancel={ActiveStatus} ActiveStatus={entry.ActiveStatus} DeleteStatus={entry.DeleteStatus} Rate={entry.Rate} Qty={entry.Qty} Discount={entry.Discount} VisitDate={entry.Date} Amount={entry.Amount} User={entry.FirstName} ReportingName={entry.ReportingName}/>)})}
-      <NewServiceEntry OSID={OSID} getServiceEntriesDetails={getServiceEntriesDetails}/>
+      {IPDDoctorVisitListDetails.map((entry, index) => {return(<ServiceEntry AID={entry.AID} OSID={OSID} ReceiptCancel={ActiveStatus} ActiveStatus={entry.ActiveStatus} DeleteStatus={entry.DeleteStatus} Rate={entry.Rate} Qty={entry.Qty} Discount={entry.Discount} VisitDate={entry.Date} Amount={entry.Amount} User={entry.FirstName} ReportingName={entry.ReportingName} patientDetails={patientDetails}/>)})}
+      <NewServiceEntry OSID={OSID} getServiceEntriesDetails={getServiceEntriesDetails} patientDetails={patientDetails}/>
     </span>
   );
 };

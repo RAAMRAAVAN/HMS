@@ -11,7 +11,7 @@ export const PharmacyBills = (props) => {
   const getPharmacyBills = async (data) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchPharmacyBills",
+        "http://localhost:5000/fetchPharmacyBills",
         { IPDID: data }
       );
       setPharmacyBills(response.data.pharmacyBills);

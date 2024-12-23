@@ -9,7 +9,7 @@ export const OTServiceCharge = (props) => {
   const [OTServiceCharge, setOTServiceCharge] = useState([]);
   const fetchOTServiceCharge = async (data) => {
     try {
-      const response = await axios.post("http://192.168.1.32:5000/fetchOTServiceCharge", {
+      const response = await axios.post("http://localhost:5000/fetchOTServiceCharge", {
         OTID: data,
       });
       console.log("OT BIlls", response.data.OTServiceCharge);

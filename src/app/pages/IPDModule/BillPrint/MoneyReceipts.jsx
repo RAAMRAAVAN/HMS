@@ -10,7 +10,7 @@ export const MoneyReceipt = (props) => {
   const fetchIPDMoneyReceipts = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDMoneyReceipts",
+        "http://localhost:5000/fetchIPDMoneyReceipts",
         {
           IPDID: input,
         }

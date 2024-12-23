@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 
 export const VisitEntry = (props) => {
+  const {patientDetails} = props;
   let [AID, setAID] = useState(props.AID);
   let [Rate, setRate] = useState(props.Rate);
   let [NoOfVisit, setNoOfVisit] = useState(props.NoOfVisit);
@@ -23,7 +24,7 @@ export const VisitEntry = (props) => {
   const UpdateVisitDetails = async(A, D) => {
     // alert("UPdate",{AID: AID,ActiveStatus: ActiveStatus, DeleteStatus: DeleteStatus, Date: VisitDate, NoOfVisit: NoOfVisit, Discount: Discount, Amount: Amount, Rate: Rate, User: "1"})
     try{
-      let result = await axios.post('http://192.168.1.32:5000/UpdateVisitDetails', {AID: AID,ActiveStatus: A, DeleteStatus: D, Date: VisitDate, NoOfVisit: NoOfVisit, Discount: Discount, Amount: Amount, Rate: Rate, User: "1"})
+      let result = await axios.post('http://localhost:5000/UpdateVisitDetails', {AID: AID,ActiveStatus: A, DeleteStatus: D, Date: VisitDate, NoOfVisit: NoOfVisit, Discount: Discount, Amount: Amount, Rate: Rate, User: "1"})
       alert("Entry Updatted");
     } catch (err) {
       console.log(err);
@@ -182,6 +183,7 @@ export const VisitEntry = (props) => {
             size="small"
             style={{ padding: "0", margin: "0" }}
             onClick={()=>{setActiveStatus("N");setDeleteStatus("Y");UpdateVisitDetails("N", "Y")}}
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <Delete
               size="small"
@@ -199,6 +201,7 @@ export const VisitEntry = (props) => {
             size="small"
             style={{ padding: "0", margin: "0"}}
             onClick={()=>{setActiveStatus("Y");setDeleteStatus("N");UpdateVisitDetails("Y", "N")}}
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <Restore
               size="small"
@@ -215,7 +218,7 @@ export const VisitEntry = (props) => {
             aria-label="delete"
             size="small"
             style={{ padding: "0", margin: "0"}}
-              
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <SystemUpdateAlt
               size="small"

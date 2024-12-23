@@ -6,13 +6,15 @@ import { createAppSlice } from "../../createAppSlice"; // Adjust the import path
 // Define the state interface for UserSlice
 export interface IpdPatientSliceState {
   IPDNo: number;  // If userDetails is an object, define it as such
-  selectedPatient: {};
+  selectedPatient: { IPAID: null | string };
+  fetch: boolean
 }
 
 // Define the initial state
 const initialState: IpdPatientSliceState = {
-  IPDNo: null,
-  selectedPatient: null
+  IPDNo: 0,
+  selectedPatient: {IPAID: null},
+  fetch: false
 };
 
 // Create the user slice
@@ -36,15 +38,23 @@ export const ipdPatientSlice = createAppSlice({
     assignselectedPatient: create.reducer(
       (state, action: PayloadAction<{}>) => {
         state.selectedPatient = action.payload;
+        state.IPDNo = action.payload.IPAID;
+      },
+    ),
+    updateFetch: create.reducer(
+      (state) => {
+        // state.IPDNo = action.payload;
+        state.fetch = false;
       },
     ),
   })
 });
 
 // Action creators are generated for each case reducer function.
-export const { assignIPDNo, assignselectedPatient} =
+export const { assignIPDNo, assignselectedPatient, updateFetch} =
 ipdPatientSlice.actions;
 
 // Define selectors for accessing state
 export const selectIPDNo = (state: { ipdPatientSlice: IpdPatientSliceState }) => state.ipdPatientSlice.IPDNo;
 export const selectselectedPatient = (state: { ipdPatientSlice: IpdPatientSliceState }) => state.ipdPatientSlice.selectedPatient;
+export const selectfetch = (state: { ipdPatientSlice: IpdPatientSliceState }) => state.ipdPatientSlice.fetch;

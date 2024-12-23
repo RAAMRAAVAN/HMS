@@ -20,7 +20,7 @@ import { selectUserDetails } from "@/src/lib/features/userLoginDetails/userSlice
 import { selectIPDNo } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
 
 export const AddIPDMoneyReceipt = (props) => {
-  const { setOpen, open } = props;
+  const { setOpen, open, patientDetails } = props;
   const handlePrintClick = (ReceiptID) => {
     const url = `/pages/IPDModule/MoneyReceipt?ReceiptID=${ReceiptID}`;
     window.open(url, "_blank"); // Opens in a new tab
@@ -40,35 +40,16 @@ export const AddIPDMoneyReceipt = (props) => {
   const [bank, setBank] = useState("65");
   const [trnID, setTrnID] = useState("");
   const [remark, setRemark] = useState("");
-  // console.log(
-  //   "date",
-  //   date,
-  //   "time",
-  //   time,
-  //   "AdmDate",
-  //   AdmDate,
-  //   "AdmTime",
-  //   extractTimeFromISO(MRDDetails.Time)
-  // );
-  // console.log(AdmDate + new Date(MRDDetails.Time).toTimeString().split(" ")[0]);
-  const getMRDDetails = async (input) => {
-    try {
-      const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDPatientDetails",
-        { IPDNo: input }
-      );
-      console.log("money=", response.data[0]);
-      setMRDDetails(response.data[0]);
-      setAdmDate(new Date(response.data[0].Date).toISOString().split("T")[0]);
+
+  const getMRDDetails = () => {
+      setAdmDate(new Date(patientDetails.Date).toISOString().split("T")[0]);
       setAdmTime(
         convertTimeTo12HourFormat(
-          new Date(response.data[0].Time).toISOString().split("T")[1]
+          new Date(patientDetails.Time).toISOString().split("T")[1]
         )
       );
-
-    } catch (error) {
-      alert("DB Error");
-    }
+      setDate(new Date().toISOString().split("T")[0]);
+      setTime(new Date().toTimeString().slice(0, 5));
   };
 
   const ResetValues = () => {
@@ -84,22 +65,22 @@ export const AddIPDMoneyReceipt = (props) => {
 
   const SaveMoneyReceipt = async (printStatus) => {
     try {
-      let response = await axios.post("http://192.168.1.32:5000/addMoneyReceipt", {
+      let response = await axios.post("http://localhost:5000/addMoneyReceipt", {
         ReceiptDate: date,
         ReceiptTime: time,
         AdmitDate: AdmDate,
-        HRNo: MRDDetails.HRNo,
-        WardID: MRDDetails.WardID,
-        BedID: MRDDetails.BedID,
-        PatientName: MRDDetails.PatientName,
+        HRNo: patientDetails.HRNo,
+        WardID: patientDetails.WardID,
+        BedID: patientDetails.BedID,
+        PatientName: patientDetails.PatientName,
         IPDNo: IPDID,
-        Address: MRDDetails.Address,
+        Address: patientDetails.Address,
         TotalAmount: recAmount,
         Remark: remark,
         MOD: paymentMethod,
         UserID: UserDetails.UId,
         AccountNo: trnID,
-        IPDID: MRDDetails.PrintIPDNo,
+        IPDID: patientDetails.PrintIPDNo,
         BankID: bank,
       });
       if(response.status === 200){
@@ -125,10 +106,11 @@ export const AddIPDMoneyReceipt = (props) => {
     UpdateBankMenu();
   }, [paymentMethod]);
   useEffect(() => {
-    getMRDDetails(IPDID);
-  }, []);
+    if(open === true)
+      getMRDDetails(IPDID);
+  }, [open]);
 
-  return MRDDetails !={}? (
+  return patientDetails !={}? (
     <Modal
       aria-labelledby="unstyled-modal-title"
       aria-describedby="unstyled-modal-description"
@@ -195,7 +177,7 @@ export const AddIPDMoneyReceipt = (props) => {
                 <TextField
                   placeholder="Name"
                   size="small"
-                  value={MRDDetails.PatientName}
+                  value={patientDetails.PatientName}
                   disabled
                   fontSize={12}
                 />
@@ -207,7 +189,7 @@ export const AddIPDMoneyReceipt = (props) => {
                 <TextField
                   placeholder="HRNO"
                   size="small"
-                  value={MRDDetails.HRNo}
+                  value={patientDetails.HRNo}
                   disabled
                   fontSize={12}
                 />
@@ -244,7 +226,7 @@ export const AddIPDMoneyReceipt = (props) => {
                 <TextField
                   placeholder="HRNO"
                   size="small"
-                  value={MRDDetails.CompanyID == "110" ? "Ayushman" : "General"}
+                  value={patientDetails.CompanyID == "110" ? "Ayushman" : "General"}
                   disabled
                   fontSize={12}
                 />
@@ -257,7 +239,7 @@ export const AddIPDMoneyReceipt = (props) => {
                 <TextField
                   placeholder="Bed No"
                   size="small"
-                  value={MRDDetails.BedNo}
+                  value={patientDetails.BedNo}
                   disabled
                   fontSize={12}
                 />

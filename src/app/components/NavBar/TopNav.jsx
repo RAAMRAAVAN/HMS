@@ -98,7 +98,8 @@ export const TopNav = (props) => {
                 fontSize:"14px",
                 cursor:"pointer"
               }}
-              onClick={()=>{dispatch(assignIPDNo(null));dispatch(assignselectedPatient(null));router.push('/');}}
+              onClick={()=>{dispatch(assignIPDNo(null));dispatch(assignselectedPatient({IPAID: null}));router.push('/');}}
+              // onClick={()=>{router.push('/');}}
             >
               Institute Of Urology And Kidney Diseases
             </Typography>

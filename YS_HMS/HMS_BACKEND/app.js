@@ -7,7 +7,7 @@ var config = {
   user: 'sa',
   password: 'sqlserver2012',
   database: 'KH_20232024',
-  server: 'DESKTOP-C6C2545', // for local machine, use '192.168.1.32'
+  server: 'DESKTOP-C6C2545', // for local machine, use 'localhost'
   driver: 'odbc',
   pool: {
     max: 50000,
@@ -30,7 +30,7 @@ const upload = multer({ dest: 'uploads/' });
 // app.use('/uploads', express.static('uploads'));
 // const URI = "mongodb+srv://rambaburai911:Ram911@zomato.bilturd.mongodb.net/IUKD_caffeteria?retryWrites=true&w=majority";
 const URI = "mongodb://127.0.0.1:27017/IUKD_caffeteria"
-// const host = "192.168.1.32";
+// const host = "localhost";
 
 const APIRoutes = require("./Routes/APIRoutes");
 app.use(cors())

@@ -5,7 +5,7 @@ import { createAppSlice } from "../../createAppSlice"; // Adjust the import path
 
 // Define the state interface for UserSlice
 export interface IpdCaseEntrySliceState {
-  Entries: {}[];
+  Entries: Array<{}>;
   DiscountP: number;
 }
 
@@ -22,6 +22,12 @@ export const ipdCaseEntrySlice = createAppSlice({
 
   reducers: (create) => ({
     // Use the `PayloadAction` type t+o declare the contents of `action.payload`
+    manualCaseEntry: create.reducer(
+      (state, action: PayloadAction<{value: Array<{}>}>)=>{
+        console.log("action.payload.value=")
+        state.Entries = action.payload.value;
+      }
+    ),
     updateCaseEntries: create.reducer(
       (state, action: PayloadAction<{Entry: {}; index: number}>) => {
         const {Entry, index} = action.payload
@@ -82,7 +88,7 @@ export const ipdCaseEntrySlice = createAppSlice({
 });
 
 // Action creators are generated for each case reducer function.
-export const { updateCaseEntries, setCaseEntry, calculateDiscount,deleteCaseEntry, clearCaseEntries, assignDiscountP, updateAmount, updateDiscount} =
+export const { updateCaseEntries, manualCaseEntry,setCaseEntry, calculateDiscount,deleteCaseEntry, clearCaseEntries, assignDiscountP, updateAmount, updateDiscount} =
 ipdCaseEntrySlice.actions;
 
 // Define selectors for accessing state

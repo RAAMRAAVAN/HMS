@@ -15,7 +15,7 @@ export const DiagonasticCharges = (props) => {
   const getDiagonasticCharges = async (data) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchDiagonasticCharges",
+        "http://localhost:5000/fetchDiagonasticCharges",
         { IPDID: data }
       );
       setDiagonasticCharges(response.data.DiagonasticCharges);

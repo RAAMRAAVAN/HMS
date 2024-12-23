@@ -17,7 +17,7 @@ import {
 } from "../SelectValues";
 
 export const UpdateIPDMoneyReceipt = (props) => {
-  const { setUpdateOpen, updateOpen, IPDNo, ReceiptID } = props;
+  const { setUpdateOpen, updateOpen, IPDNo, ReceiptID, patientDetails } = props;
   const handlePrintClick = (ReceiptID) => {
     const url = `/pages/IPDModule/MoneyReceipt?ReceiptID=${ReceiptID}`;
     window.open(url, "_blank"); // Opens in a new tab
@@ -43,32 +43,21 @@ export const UpdateIPDMoneyReceipt = (props) => {
     "AdmDate",
     AdmDate,
     "AdmTime",
-    extractTimeFromISO(MRDDetails.Time)
+    extractTimeFromISO(patientDetails.Time)
   );
-  console.log(AdmDate + new Date(MRDDetails.Time).toTimeString().split(" ")[0]);
-  const getMRDDetails = async (input) => {
-    try {
-      const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDPatientDetails",
-        { IPDNo: input }
-      );
-      console.log("money=", response.data[0]);
-      setMRDDetails(response.data[0]);
-      setAdmDate(new Date(response.data[0].Date).toISOString().split("T")[0]);
+  console.log(AdmDate + new Date(patientDetails.Time).toTimeString().split(" ")[0]);
+  const getMRDDetails = () => {
+      setAdmDate(new Date(patientDetails.Date).toISOString().split("T")[0]);
       setAdmTime(
         convertTimeTo12HourFormat(
-          new Date(response.data[0].Time).toTimeString().split(" ")[0]
+          new Date(patientDetails.Time).toTimeString().split(" ")[0]
         )
       );
-
-    } catch (error) {
-      alert("DB Error");
-    }
   };
 
   const getMoneyReceiptDetails = async() => {
     try{
-      let result = await axios.post('http://192.168.1.32:5000/getMoneyReceiptDetails', {ReceiptID: ReceiptID});
+      let result = await axios.post('http://localhost:5000/getMoneyReceiptDetails', {ReceiptID: ReceiptID});
       console.log("receipt Details=",result);
       setRecAmount(result.data.MoneyReceiptDetatils.RecAmount);
       setpaymentMethod(result.data.MoneyReceiptDetatils.MOD);
@@ -97,7 +86,7 @@ export const UpdateIPDMoneyReceipt = (props) => {
 
   const UpdateMoneyReceipt = async (printStatus) => {
     try {
-      let response = await axios.post("http://192.168.1.32:5000/updateMoneyReceipt", {
+      let response = await axios.post("http://localhost:5000/updateMoneyReceipt", {
         ReceiptID: ReceiptID,
         ReceiptDate: date,
         ReceiptTime: time,
@@ -205,7 +194,7 @@ export const UpdateIPDMoneyReceipt = (props) => {
                 <TextField
                   placeholder="Name"
                   size="small"
-                  value={MRDDetails.PatientName}
+                  value={patientDetails.PatientName}
                   disabled
                   fontSize={12}
                 />
@@ -217,7 +206,7 @@ export const UpdateIPDMoneyReceipt = (props) => {
                 <TextField
                   placeholder="HRNO"
                   size="small"
-                  value={MRDDetails.HRNo}
+                  value={patientDetails.HRNo}
                   disabled
                   fontSize={12}
                 />
@@ -254,7 +243,7 @@ export const UpdateIPDMoneyReceipt = (props) => {
                 <TextField
                   placeholder="HRNO"
                   size="small"
-                  value={MRDDetails.CompanyID == "110" ? "Ayushman" : "General"}
+                  value={patientDetails.CompanyID == "110" ? "Ayushman" : "General"}
                   disabled
                   fontSize={12}
                 />
@@ -267,7 +256,7 @@ export const UpdateIPDMoneyReceipt = (props) => {
                 <TextField
                   placeholder="Bed No"
                   size="small"
-                  value={MRDDetails.BedNo}
+                  value={patientDetails.BedNo}
                   disabled
                   fontSize={12}
                 />

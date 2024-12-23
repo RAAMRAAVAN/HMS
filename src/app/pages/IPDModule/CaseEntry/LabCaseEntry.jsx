@@ -24,24 +24,26 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIPDNo } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
-import { useEffect, useState } from "react";
+import { selectIPDNo, selectselectedPatient } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
+import { useEffect, useRef, useState } from "react";
 import { setMOP } from "../SelectValues";
 import {CreateNewCaseEntry} from "./CreateNew/CreateNewCaseEntry"
 import {EditCaseEntry} from "./EditCaseEntry/EditCaseEntry"
 
 export const LabCaseEntry = (props) => {
   const dispatch = useDispatch();
-  const IPDNo = useSelector(selectIPDNo)
+  const IPDNo = useSelector(selectselectedPatient).IPAID;
+  const hasFetchedForCaseEntry = useRef(null);
+  const {patientDetails} = props;
   const [CaseEntryList, setCaseEntryList] = useState([]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [CaseID, setCaseID] = useState(null);
   
-  console.log("CaseEntryList", CaseEntryList)
+  // console.log("CaseEntryList", CaseEntryList)
   const fetchIPDCaseEntry = async () => {
     try {
-      const result = await axios.post("http://192.168.1.32:5000/fetchIPDCaseEntry", { IPAID: IPDNo });
+      const result = await axios.post("http://localhost:5000/fetchIPDCaseEntry", { IPAID: IPDNo });
       setCaseEntryList(result.data.IPDCaseEntry);
     } catch (err) {
       alert(err);
@@ -50,7 +52,7 @@ export const LabCaseEntry = (props) => {
 
   const deleteIPDCaseEntry = async (CaseID) => {
     try{
-        let result = await axios.post('http://192.168.1.32:5000/deleteIPDCaseEntry', {CaseID: CaseID});
+        let result = await axios.post('http://localhost:5000/deleteIPDCaseEntry', {CaseID: CaseID});
         if(result.data.Status === true)
           alert("Entry Deleted")
         fetchIPDCaseEntry();
@@ -60,8 +62,8 @@ export const LabCaseEntry = (props) => {
   }
 
   const handleUpdate = (CaseID) => {
-    setCaseID(CaseID);
     setOpen2(true);
+    setCaseID(CaseID);
   }
   const handlePrintClick = (ReceiptID) => {
     console.log("print");
@@ -70,14 +72,18 @@ export const LabCaseEntry = (props) => {
   };
   
   useEffect(() => {
-    fetchIPDCaseEntry();
-  }, [CaseID])
+    if(IPDNo != null && hasFetchedForCaseEntry.current !== IPDNo){
+      fetchIPDCaseEntry();
+      hasFetchedForCaseEntry.current = IPDNo;
+  }
+  }, [IPDNo])
   return (
     <>
-      <CreateNewCaseEntry open={open} setOpen={setOpen} fetchIPDCaseEntry={fetchIPDCaseEntry}/>
+      <CreateNewCaseEntry open={open} setOpen={setOpen} fetchIPDCaseEntry={fetchIPDCaseEntry} patientDetails={patientDetails}/>
+      <EditCaseEntry open={open2} setOpen={setOpen2} CaseID={CaseID}/>
       <Box display="flex" justifyContent="space-between" width="97vw" paddingY={1}>
         <Typography fontWeight="bold">Case Entry</Typography>
-        <Button variant="contained" size="small" onClick={()=>{setOpen(!open)}}>Add</Button>
+        <Button variant="contained" size="small" onClick={()=>{setOpen(!open)}} disabled={patientDetails.Discharge==="Y"?true: false}>Add</Button>
       </Box>
       <Box display="flex" width="97vw" flexDirection="column">
         <Grid container display="flex" width="100%">
@@ -117,7 +123,8 @@ export const LabCaseEntry = (props) => {
         </Grid>
         {CaseEntryList.map((CaseEntry, index) => {
           
-          return (<><EditCaseEntry open={open2} setOpen={setOpen2} CaseID={CaseID}/>
+          return (<>
+          
           <Grid container>
             <Grid xs={1} item border="1px black solid" padding={1}>
               <Typography fontSize={12} >{index + 1}</Typography>
@@ -163,6 +170,7 @@ export const LabCaseEntry = (props) => {
                 size="small"
                 style={{ padding: "0", margin: "0" }}
               onClick={() => handleUpdate(CaseEntry.CaseID)}
+              disabled={patientDetails.Discharge==="Y"?true: false}
               >
                 <EditNote
                   size="small"
@@ -180,6 +188,7 @@ export const LabCaseEntry = (props) => {
                 size="small"
                 style={{ padding: "0", margin: "0" }}
               onClick={() => deleteIPDCaseEntry(CaseEntry.CaseID)}
+              disabled={patientDetails.Discharge==="Y"?true: false}
               >
                 <Delete
                   size="small"

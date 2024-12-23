@@ -292,12 +292,36 @@ exports.deleteIPDCaseEntry = async(req, res) => {
 
     exports.IPDCaseEntryDetails = async(req, res) => {
         const {CaseID} = req.body;
-        console.log("IPD NO", CaseID)
+        // console.log("IPD NO", CaseID)
         const request = new sql.Request();
-        const query1 = `select * from Trn_CaseEntryDetails where CaseID=${CaseID}`;
+        const result = []
+        const query1 = `select TestID AS ServiceID, Rate,  DiscountAmount AS Discount, 0 AS Tax,Amount, TestCancel from Trn_CaseEntryDetails where ActiveStatus='Y' AND DeleteStatus='N' AND CaseID=${CaseID}`;
         try{
             const IPDCaseEntryDetails = await request.query(query1);
-            res.json({ IPDCaseEntryDetails: IPDCaseEntryDetails.recordset})
+            // const result = IPDCaseEntryDetails;
+            let i=0;
+            for (const Entry of IPDCaseEntryDetails.recordset){
+                const serviceDetails = await request.query(`select SMD.Rate,SM.AID, SM.SID, SM.ServiceName, SM.ReportingName, SM.SubDepartmentID, SM.ReportFormatID, TAX.GSTPre,SM.SampleCollection, SM.SampleID from M_ServiceMaster AS SM
+                    JOIN
+                    M_ServiceMasterDetails AS SMD
+                    ON SM.SID = SMD.SID
+                    JOIN
+                    V#GSTAccountPre AS TAX
+                    ON TAX.AccountLedgerID = SM.TaxAccountID
+                    where ServiceCode=${Entry.ServiceID} AND SM.ActiveStatus='Y'`)
+                const modifiedEntry = {
+                    SLNO: i+1,
+                    Service: serviceDetails.recordset[0],                    
+                    Rate: Entry.Rate, 
+                    Discount: Entry.Discount,
+                    Tax: Entry.Tax,
+                    Amount: Entry.Amount,
+                    ExistingEntry: 'Y'
+                };
+                result.push(modifiedEntry);
+                i++;
+            }
+            res.json({ IPDCaseEntryDetails: result})
         }catch (err){
             res.status(500).json({error: "Database Error", Status: false})
         }

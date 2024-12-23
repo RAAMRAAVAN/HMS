@@ -203,7 +203,7 @@ export const IPDAdmissionList = () => {
   const getAdmissionResources = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/admission_resources"
+        "http://localhost:5000/admission_resources"
       );
       console.log(response);
       setOccupationList(response.data.occupations);
@@ -224,7 +224,7 @@ export const IPDAdmissionList = () => {
   const getFilteredPatients = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/filtered_patient",
+        "http://localhost:5000/filtered_patient",
         {
           like_name: input,
         }
@@ -238,7 +238,7 @@ export const IPDAdmissionList = () => {
   const setIPDAdmission = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/post-admission",input
+        "http://localhost:5000/post-admission",input
       );
       console.log("POST Result",response);
       if(response.data.InsertStatus.rowsAffected[0] === 1)
@@ -305,7 +305,7 @@ export const IPDAdmissionList = () => {
   const CheckPatientAlreadyAdmitted = async() => {
     if (selectedPatient != null){
     try{
-      let result = await axios.post("http://192.168.1.32:5000/checkAdmissionStatus", {HRNo: selectedPatient.HRNo})
+      let result = await axios.post("http://localhost:5000/checkAdmissionStatus", {HRNo: selectedPatient.HRNo})
       console.log(result.data.NoOfAdmission);
       if(result.data.NoOfAdmission === 0)
         setAlreadyAdmitted(false)

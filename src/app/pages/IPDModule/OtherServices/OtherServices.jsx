@@ -31,11 +31,12 @@ import {
 import { ServiceEntries } from "./ServiceEntries";
 import { CreateOtherServiceEntry } from "./CreateOtherServiceEntry";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIPDNo } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
+import { selectIPDNo, selectselectedPatient } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
 
 export const OtherServices = (props) => {
   const dispatch = useDispatch();
-  const IPDNo = useSelector(selectIPDNo)
+  const {patientDetails} = props;
+  const IPDNo = useSelector(selectselectedPatient).IPAID
   const [OtherServicesList, setOtherServicesList] = useState([]);
   const [submissionSuccessfulAlert, setsubmissionSuccessfulAlert] =
     useState(false);
@@ -61,7 +62,7 @@ export const OtherServices = (props) => {
     setOtherServicesList([])
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/OtherServicesList",
+        "http://localhost:5000/OtherServicesList",
         {
           IPDID: input,
         }
@@ -80,7 +81,7 @@ export const OtherServices = (props) => {
   const deleteOtherServiceEntries = async (ReceiptID) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/deleteOtherServiceEntries",
+        "http://localhost:5000/deleteOtherServiceEntries",
         { ReceiptID: ReceiptID }
       );
       if (response.data.Status === true) {
@@ -306,9 +307,9 @@ export const OtherServices = (props) => {
             </Typography>
           </Grid>
         </Grid>
-        {open?<CreateOtherServiceEntry style={{display:"none"}} open={open} setOpen={setOpen} IPDID={IPDNo} fetchIPDOtherServiceList={fetchIPDOtherServiceList}/>: null}
+        {open?<CreateOtherServiceEntry style={{display:"none"}} open={open} setOpen={setOpen} IPDID={IPDNo} fetchIPDOtherServiceList={fetchIPDOtherServiceList} patientDetails={patientDetails}/>: null}
         {OtherServicesList.map((list, index) => {
-          return <ServiceEntries ReceiptDetails={list} />;
+          return <ServiceEntries ReceiptDetails={list} patientDetails={patientDetails}/>;
         })}
       </Box>
     </>

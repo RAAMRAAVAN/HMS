@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 export const CreateOtherServiceEntry = (props) => {
     let {open, setOpen, IPDID, fetchIPDOtherServiceList}=props;
+    const {patientDetails} = props;
     console.log("CreateIPDDoctorVisit=", open, IPDID)
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const [time, setTime] = useState(new Date().toTimeString().slice(0, 5));
@@ -21,7 +22,7 @@ export const CreateOtherServiceEntry = (props) => {
     const CreateOtherService = async() => {
         setOpen(false);
         try{
-            let result = await axios.post('http://192.168.1.32:5000/CreateOtherService', {
+            let result = await axios.post('http://localhost:5000/CreateOtherService', {
                 ReceiptDate: date,
                 ReceiptTime: time,
                 IPDID: IPDID,
@@ -43,7 +44,7 @@ export const CreateOtherServiceEntry = (props) => {
     }
     const getServiceList = async() => {
       try{
-          let result = await axios.get("http://192.168.1.32:5000/getServiceList");
+          let result = await axios.get("http://localhost:5000/getServiceList");
           console.log(result.data.ServiceList);
           setServiceList(result.data.ServiceList)
       }catch(err){
@@ -199,7 +200,7 @@ useEffect(()=>{
         display="flex"
         justifyContent="space-between"
       >
-        <Button fullWidth variant="contained" onClick={()=>{CreateOtherService()}}>Submit</Button>
+        <Button fullWidth variant="contained" onClick={()=>{CreateOtherService()}} disabled={patientDetails.Discharge==="Y"?true: false}>Submit</Button>
       </Grid>
     </Grid></>)
 }

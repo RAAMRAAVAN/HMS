@@ -18,7 +18,7 @@ export const BedCharges = (props) => {
   const getBedCharges = async (data) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDBillDetails",
+        "http://localhost:5000/fetchIPDBillDetails",
         { IPAID: data }
       );
       setBedCharges(response.data.BedCharges)

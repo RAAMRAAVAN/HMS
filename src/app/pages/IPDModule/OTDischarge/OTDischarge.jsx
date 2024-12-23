@@ -3,13 +3,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { formatDateTime } from "../SelectValues";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIPDNo } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
+import { selectIPDNo, selectselectedPatient } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
 import { AddOTDischarge } from "./AddOTDischarge"
 import { EditNote, Print, ViewAgenda } from "@mui/icons-material";
 
 export const OTDischarge = () => {
   const dispatch = useDispatch();
-  const IPDNo = useSelector(selectIPDNo)
+  const IPDNo = useSelector(selectselectedPatient).IPAID
   const [otDischargeList, setOTDischargeList] = useState([]);
   // const navigate = useNavigate();
   const handlePrintClick = (PId) => {
@@ -21,7 +21,7 @@ export const OTDischarge = () => {
   const fetchOtDischarge = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchOtDischarge",
+        "http://localhost:5000/fetchOtDischarge",
         {
           IPAID: input,
         }

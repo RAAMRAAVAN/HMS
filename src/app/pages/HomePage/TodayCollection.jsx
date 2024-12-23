@@ -3,7 +3,7 @@ import { Fullscreen, Minimize, Mouse } from "@mui/icons-material"
 import { Box, Grid, Typography } from "@mui/material"
 // import Grid from "@mui/material/Unstable_Grid/Grid"
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 // import { useNavigation } from "react-router-dom";
 
@@ -54,130 +54,62 @@ export const TodayCollection = () => {
   const [PharmacyUPI, setPharmacyUPI] = useState(0);
   const [PharmacyCredit, setPharmacyCredit] = useState(0);
   const [PharmacyTotal, setPharmacyTotal] = useState(0);
-
-  const [CaffeteriaData, setCaffeteriaData] = useState([]);
-  
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [fromDate, setFromDate] = useState(today); // Initialize with today's date
-  const [toDate, setToDate] = useState(today); // Initialize with today's date
+  const [error, setError] = useState();
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    const fetchFrontDesk = async () => {
+    const fetchCollection = async () => {
       try {
-        const response = await axios.post('http://192.168.1.32:5000/get-FrontdeskCollection', {fromDate: new Date().toISOString().split('T')[0], toDate: new Date().toISOString().split('T')[0], Uid: UserDetails.UId});
+        const response = await axios.post('http://localhost:5000/getCollection', {fromDate: new Date().toISOString().split('T')[0], toDate: new Date().toISOString().split('T')[0], Uid: UserDetails.UId});
         // console.log("total",response.data.find(item => item.MOD === null).TotalRate);
         if(response!=[]){
-          setFrontDeskData(response.data); // Update state with the fetched data
-          setFrontDeskTotal(response.data.find(item => item.MOD === null)?response.data.find(item => item.MOD === null).TotalRate: 0)
-          setFrontDeskCash(response.data.find(item => item.MOD === "C")?response.data.find(item => item.MOD === "C").TotalRate: 0)
-          setFrontDeskCard(response.data.find(item => item.MOD === "CA")?response.data.find(item => item.MOD === "CA").TotalRate: 0)
-          setFrontDeskUPI(response.data.find(item => item.MOD === "CH")?response.data.find(item => item.MOD === "CH").TotalRate: 0)
-          setFrontDeskCredit(response.data.find(item => item.MOD === "CR")?response.data.find(item => item.MOD === "CR").TotalRate: 0)
-          setFrontDeskNB(response.data.find(item => item.MOD === "NB")?response.data.find(item => item.MOD === "NB").TotalRate: 0)
-          setFrontDeskBTC(response.data.find(item => item.MOD === "B")?response.data.find(item => item.MOD === "B").TotalRate: 0)
+          setFrontDeskData(response.data.FrontdeskCollection); // Update state with the fetched data
+          setFrontDeskTotal(response.data.FrontdeskCollection.find(item => item.MOD === null)?response.data.FrontdeskCollection.find(item => item.MOD === null).TotalRate: 0)
+          setFrontDeskCash(response.data.FrontdeskCollection.find(item => item.MOD === "C")?response.data.FrontdeskCollection.find(item => item.MOD === "C").TotalRate: 0)
+          setFrontDeskCard(response.data.FrontdeskCollection.find(item => item.MOD === "CA")?response.data.FrontdeskCollection.find(item => item.MOD === "CA").TotalRate: 0)
+          setFrontDeskUPI(response.data.FrontdeskCollection.find(item => item.MOD === "CH")?response.data.FrontdeskCollection.find(item => item.MOD === "CH").TotalRate: 0)
+          setFrontDeskCredit(response.data.FrontdeskCollection.find(item => item.MOD === "CR")?response.data.FrontdeskCollection.find(item => item.MOD === "CR").TotalRate: 0)
+          setFrontDeskNB(response.data.FrontdeskCollection.find(item => item.MOD === "NB")?response.data.FrontdeskCollection.find(item => item.MOD === "NB").TotalRate: 0)
+          setFrontDeskBTC(response.data.FrontdeskCollection.find(item => item.MOD === "B")?response.data.FrontdeskCollection.find(item => item.MOD === "B").TotalRate: 0)
+
+          setLABData(response.data.PathologyCollection); // Update state with the fetched data
+          setLABTotal(response.data.PathologyCollection.find(item => item.MOD === null)?response.data.PathologyCollection.find(item => item.MOD === null).TotalRate: 0)
+          setLABCash(response.data.PathologyCollection.find(item => item.MOD === "C")?response.data.PathologyCollection.find(item => item.MOD === "C").TotalRate: 0)
+          setLABCard(response.data.PathologyCollection.find(item => item.MOD === "CA")?response.data.PathologyCollection.find(item => item.MOD === "CA").TotalRate: 0)
+          setLABUPI(response.data.PathologyCollection.find(item => item.MOD === "CH")?response.data.PathologyCollection.find(item => item.MOD === "CH").TotalRate: 0)
+          setLABCredit(response.data.PathologyCollection.find(item => item.MOD === "CR")?response.data.PathologyCollection.find(item => item.MOD === "CR").TotalRate: 0)
+
+          setIPDData(response.data.IPDCollection); // Update state with the fetched data
+          setIPDTotal(response.data.IPDCollection.find(item => item.MOD === null)?response.data.IPDCollection.find(item => item.MOD === null).TotalRate: 0)
+          setIPDCash(response.data.IPDCollection.find(item => item.MOD === "C")?response.data.IPDCollection.find(item => item.MOD === "C").TotalRate: 0)
+          setIPDCard(response.data.IPDCollection.find(item => item.MOD === "CA")?response.data.IPDCollection.find(item => item.MOD === "CA").TotalRate: 0)
+          setIPDUPI(response.data.IPDCollection.find(item => item.MOD === "CH")?response.data.IPDCollection.find(item => item.MOD === "CH").TotalRate: 0)
+          setIPDCredit(response.data.IPDCollection.find(item => item.MOD === "CR")?response.data.IPDCollection.find(item => item.MOD === "CR").TotalRate: 0)
+          setIPDBTC(response.data.IPDCollection.find(item => item.MOD === "B")?response.data.IPDCollection.find(item => item.MOD === "B").TotalRate: 0)
+          setIPDNB(response.data.IPDCollection.find(item => item.MOD === "NB")?response.data.IPDCollection.find(item => item.MOD === "NB").TotalRate: 0)
+
+          setLABIPD(response.data.PathologyIPDCollection[0].TotalRate!=null?response.data[0].TotalRate:0);
+
+          setPharmacyData(response.data.PharmacyCollection)
+          setPharmacyCash(response.data.PharmacyCollection.cashTotalAmount);
+          setPharmacyCard(response.data.PharmacyCollection.hdfcBankTotalAmount);
+          setPharmacyUPI(response.data.PharmacyCollection.iciciBankTotalAmount);
+          setPharmacyCredit(response.data.PharmacyCollection.creditTotalAmount);
+          setPharmacyTotal(response.data.PharmacyCollection.cashTotalAmount + response.data.PharmacyCollection.hdfcBankTotalAmount + response.data.PharmacyCollection.iciciBankTotalAmount);
       }
       } catch (error) {
         setError(error); // Handle error
-      } finally {
-        setLoading(false); // Set loading to false after request completes
-      }
-    };
-    const fetchLAB = async () => {
-      try {
-        const response = await axios.post('http://192.168.1.32:5000/get-PathologyCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate, Uid: UserDetails.UId});
-        if(response!=[]){
-        setLABData(response.data); // Update state with the fetched data
-        setLABTotal(response.data.find(item => item.MOD === null)?response.data.find(item => item.MOD === null).TotalRate: 0)
-        setLABCash(response.data.find(item => item.MOD === "C")?response.data.find(item => item.MOD === "C").TotalRate: 0)
-        setLABCard(response.data.find(item => item.MOD === "CA")?response.data.find(item => item.MOD === "CA").TotalRate: 0)
-        setLABUPI(response.data.find(item => item.MOD === "CH")?response.data.find(item => item.MOD === "CH").TotalRate: 0)
-        setLABCredit(response.data.find(item => item.MOD === "CR")?response.data.find(item => item.MOD === "CR").TotalRate: 0)
-      }
+      } 
+      // finally {
+      //   setLoading(false); // Set loading to false after request completes
+      // }
+    }
 
-      } catch (error) {
-        setError(error); // Handle error
-      } finally {
-        setLoading(false); // Set loading to false after request completes
-      }
-    };
-
-    const fetchIPD = async () => {
-      try {
-        const response = await axios.post('http://192.168.1.32:5000/get-IPDCollection', {fromDate: new Date().toISOString().split('T')[0], toDate: new Date().toISOString().split('T')[0], Uid: UserDetails.UId});
-        // console.log("total",response.data.find(item => item.MOD === null).TotalRate);
-        if(response!=[]){
-          setIPDData(response.data); // Update state with the fetched data
-          setIPDTotal(response.data.find(item => item.MOD === null)?response.data.find(item => item.MOD === null).TotalRate: 0)
-          setIPDCash(response.data.find(item => item.MOD === "C")?response.data.find(item => item.MOD === "C").TotalRate: 0)
-          setIPDCard(response.data.find(item => item.MOD === "CA")?response.data.find(item => item.MOD === "CA").TotalRate: 0)
-          setIPDUPI(response.data.find(item => item.MOD === "CH")?response.data.find(item => item.MOD === "CH").TotalRate: 0)
-          setIPDCredit(response.data.find(item => item.MOD === "CR")?response.data.find(item => item.MOD === "CR").TotalRate: 0)
-          setIPDBTC(response.data.find(item => item.MOD === "B")?response.data.find(item => item.MOD === "B").TotalRate: 0)
-          setIPDNB(response.data.find(item => item.MOD === "NB")?response.data.find(item => item.MOD === "NB").TotalRate: 0)
-      }
-      } catch (error) {
-        setError(error); // Handle error
-      } finally {
-        setLoading(false); // Set loading to false after request completes
-      }
-    };
-
-    const fetchIPDLAB = async () => {
-      try {
-        const response = await axios.post('http://192.168.1.32:5000/get-PathologyIPDCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate, Uid: UserDetails.UId});
-        if(response!=null){
-          setLABIPD(response.data[0].TotalRate!=null?response.data[0].TotalRate:0); // Update state with the fetched data
-          console.log(response.data[0].TotalRate!=null?response.data[0].TotalRate:0)
-          
-      }
-
-      } catch (error) {
-        setError(error); // Handle error
-      } finally {
-        setLoading(false); // Set loading to false after request completes
-      }
-    };
-
-    const fetchCaffee = async () => {
-      try {
-        const response = await axios.post('http://192.168.1.32:5000/get-caffeeCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate, Uid: UserDetails.UId});
-        console.log(response);
-        if(response!=[]){
-        setCaffeteriaData(response.data)}
-      } catch (error) {
-        setError(error); // Handle error
-      } finally {
-        setLoading(false); // Set loading to false after request completes
-      }
-    };
-
-    const fetchPharmacy = async () => {
-      try {
-        const response = await axios.post('http://192.168.1.32:5000/get-pharmacyCollection', {fromDate: fromDate, toDate: (fromDate<=toDate) ?toDate:fromDate, Uid: UserDetails.UId});
-        console.log(response);
-        if(response!=[]){
-          setPharmacyData(response.data)
-          setPharmacyCash(response.data.cashTotalAmount);
-          setPharmacyCard(response.data.hdfcBankTotalAmount);
-          setPharmacyUPI(response.data.iciciBankTotalAmount);
-          setPharmacyCredit(response.data.creditTotalAmount);
-          setPharmacyTotal(response.data.cashTotalAmount + response.data.hdfcBankTotalAmount + response.data.iciciBankTotalAmount);
-        }
-      } catch (error) {
-        setError(error); // Handle error
-      } finally {
-        setLoading(false); // Set loading to false after request completes
-      }
-    };
-
-    fetchFrontDesk();
-    fetchLAB();
-    fetchIPD();
-    fetchIPDLAB();
-    fetchCaffee();
-    fetchPharmacy();
+    
+    if (!hasFetched.current) {
+      fetchCollection();
+      hasFetched.current = true;
+    }
   }, []);
   console.log("PharmacyData=", PharmacyData)
     return(<>

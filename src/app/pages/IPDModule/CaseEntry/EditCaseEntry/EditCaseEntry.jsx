@@ -20,7 +20,7 @@ import { selectUserDetails } from "@/src/lib/features/userLoginDetails/userSlice
 import { selectIPDNo } from "@/src/lib/features/IPDPatient/IpdPatientSlice";
 import { AddItems } from "./AddItems"
 import { ManageAddedItems } from "./ManageAddedItems"
-import { selectCaseEntryItems, clearCaseEntries, } from "@/src/lib/features/IPDCaseEntry/IpdCaseEntrySlice";
+import { selectCaseEntryItems, clearCaseEntries, manualCaseEntry, } from "@/src/lib/features/IPDCaseEntry/IpdCaseEntrySlice";
 import { AddedItems } from "./AddedItems";
 // import { selectCaseEntryItems } from "@/src/lib/features/IPDCaseEntry/IpdCaseEntrySlice";
 
@@ -47,11 +47,15 @@ export const EditCaseEntry = (props) => {
   const [bank, setBank] = useState("65");
   const [trnID, setTrnID] = useState("");
   const [remark, setRemark] = useState("");
+  const [loading, setLoading] = useState("mount");
 
   const IPDCaseEntryDetails = async (input) => {
     try{
-      let response = await axios.post('http://192.168.1.32:5000/IPDCaseEntryDetails', {CaseID: input});
-      console.log('IPDCaseEntryDetails',response.data.IPDCaseEntryDetails);
+      
+      let response = await axios.post('http://localhost:5000/IPDCaseEntryDetails', {CaseID: input});
+      // console.log('IPDCaseEntryDetails',response.data.IPDCaseEntryDetails);
+      dispatch(manualCaseEntry({value: response.data.IPDCaseEntryDetails}));
+      setLoading("DataFetched");
     }catch(err){
       alert(err);
     }
@@ -59,9 +63,10 @@ export const EditCaseEntry = (props) => {
 
   const fetchCaseEntry = async (input) => {
     console.log("IPD", input);
+    setLoading("FetchData");
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchCaseEntry",
+        "http://localhost:5000/fetchCaseEntry",
         {
           ReceiptID: input,
         }
@@ -88,7 +93,7 @@ export const EditCaseEntry = (props) => {
 
   const SaveMoneyReceipt = async (printStatus) => {
     try {
-      let response = await axios.post("http://192.168.1.32:5000/addMoneyReceipt", {
+      let response = await axios.post("http://localhost:5000/addMoneyReceipt", {
         ReceiptDate: date,
         ReceiptTime: time,
         AdmitDate: AdmDate,
@@ -131,13 +136,14 @@ export const EditCaseEntry = (props) => {
     };
     UpdateBankMenu();
   }, [paymentMethod]);
+  
   useEffect(() => {
-    if (CaseID != null)
+    if (CaseID != null && open)
       {
         fetchCaseEntry(CaseID);
         IPDCaseEntryDetails(CaseID);
       }
-  }, [CaseID]);
+  }, [CaseID, open]);
 
   return CaseEntry != {} ? (
     <Modal
@@ -329,11 +335,12 @@ export const EditCaseEntry = (props) => {
             </Grid>
             {/* Items */}
 
-            {/* {Entries.map((Entry, index) => {
+            {Entries.map((Entry, index) => {
               return (<AddedItems key={Entry.SLNO} Entry={Entry} index={index} />)
             })}
+            
             <AddItems slno={Entries.length} />
-            <ManageAddedItems handleClose={handleClose} fetchIPDCaseEntry={fetchIPDCaseEntry} IPDID={IPDID} date={date} time={time} UserID={UserDetails.UId} UserName={UserDetails.FirstName} /> */}
+            <ManageAddedItems handleClose={handleClose} IPDID={IPDID} date={date} time={time} UserID={UserDetails.UId} UserName={UserDetails.FirstName} />
           </Grid>
         </Grid>
       </Box>

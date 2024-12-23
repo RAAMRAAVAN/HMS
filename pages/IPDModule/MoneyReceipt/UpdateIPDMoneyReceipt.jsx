@@ -49,7 +49,7 @@ export const UpdateIPDMoneyReceipt = (props) => {
   const getMRDDetails = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDPatientDetails",
+        "http://localhost:5000/fetchIPDPatientDetails",
         { IPDNo: input }
       );
       console.log("money=", response.data[0]);
@@ -68,7 +68,7 @@ export const UpdateIPDMoneyReceipt = (props) => {
 
   const getMoneyReceiptDetails = async() => {
     try{
-      let result = await axios.post('http://192.168.1.32:5000/getMoneyReceiptDetails', {ReceiptID: ReceiptID});
+      let result = await axios.post('http://localhost:5000/getMoneyReceiptDetails', {ReceiptID: ReceiptID});
       console.log("receipt Details=",result);
       setRecAmount(result.data.MoneyReceiptDetatils.RecAmount);
       setpaymentMethod(result.data.MoneyReceiptDetatils.MOD);
@@ -97,7 +97,7 @@ export const UpdateIPDMoneyReceipt = (props) => {
 
   const UpdateMoneyReceipt = async (printStatus) => {
     try {
-      let response = await axios.post("http://192.168.1.32:5000/updateMoneyReceipt", {
+      let response = await axios.post("http://localhost:5000/updateMoneyReceipt", {
         ReceiptID: ReceiptID,
         ReceiptDate: date,
         ReceiptTime: time,

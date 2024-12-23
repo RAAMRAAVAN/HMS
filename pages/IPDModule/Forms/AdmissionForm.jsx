@@ -13,7 +13,7 @@ export const AdmissionForm = () => {
   const getMRDDetails = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDPatientDetails",
+        "http://localhost:5000/fetchIPDPatientDetails",
         { IPDNo: input }
       );
       console.log(response.data[0]);

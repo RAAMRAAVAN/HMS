@@ -7,6 +7,7 @@ import { NewVisitEntry } from "./NewVisitEntry";
 
 export const VisitEntries = (props) => {
   //   const { ReceiptID } = props;
+  const {patientDetails} = props;
   let [ReceiptID, setReceiptID] = useState(props.ReceiptDetails.ReceiptID);
   const [IPDDoctorVisitListDetails, setIPDDoctorVisitListDetails] = useState([]);
   let [ReceiptDate, setReceiptDate] = useState(new Date(props.ReceiptDetails.ReceiptDate)
@@ -25,7 +26,7 @@ export const VisitEntries = (props) => {
   const getVisitListDetails = async() => {
     setIPDDoctorVisitListDetails([]);
     try{
-        let result = await axios.post('http://192.168.1.32:5000/getVisitListDetails', {ReceiptID: ReceiptID});
+        let result = await axios.post('http://localhost:5000/getVisitListDetails', {ReceiptID: ReceiptID});
         console.log(result.data.IPDDoctorVisitListDetails)
         setIPDDoctorVisitListDetails(result.data.IPDDoctorVisitListDetails)
     }catch (err){
@@ -35,7 +36,7 @@ export const VisitEntries = (props) => {
 
   const deleteDoctorVisitEntries = async (Act, Del) => {
     try{
-      let result = await axios.post('http://192.168.1.32:5000/deleteDoctorVisitEntries', {ReceiptID: ReceiptID, ActiveStatus:Act, DeleteStatus: Del});
+      let result = await axios.post('http://localhost:5000/deleteDoctorVisitEntries', {ReceiptID: ReceiptID, ActiveStatus:Act, DeleteStatus: Del});
       
       getVisitListDetails();
     } catch (err){
@@ -183,6 +184,7 @@ export const VisitEntries = (props) => {
             size="small"
             style={{ padding: "0", margin: "0" }}
             //   onClick={() => handleUpdateOpen(receipt.ReceiptID)}
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <EditNote
               size="small"
@@ -200,6 +202,7 @@ export const VisitEntries = (props) => {
             size="small"
             style={{ padding: "0", margin: "0" }}
             onClick={() => {setActiveStatus("N"); setDeleteStatus("Y"); deleteDoctorVisitEntries("N", "Y");}}
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <Delete
               size="small"
@@ -217,6 +220,7 @@ export const VisitEntries = (props) => {
             size="small"
             style={{ padding: "0", margin: "0" }}
               onClick={() => {setActiveStatus("Y"); setDeleteStatus("N"); deleteDoctorVisitEntries("Y", "N");}}
+              disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <Restore
               size="small"
@@ -234,6 +238,7 @@ export const VisitEntries = (props) => {
             size="small"
             style={{ padding: "0", margin: "0" }}
             //   onClick={() => handlePrintClick(receipt.ReceiptID)}
+            disabled={patientDetails.Discharge==="Y"?true: false}
           >
             <Print
               size="small"
@@ -247,8 +252,8 @@ export const VisitEntries = (props) => {
           </IconButton>
         </Grid>
       </Grid>
-      {IPDDoctorVisitListDetails.map((entry, index) => {return(<VisitEntry AID={entry.AID} ReceiptCancel={ActiveStatus} ActiveStatus={entry.ActiveStatus} DeleteStatus={entry.DeleteStatus} Rate={entry.Rate} NoOfVisit={entry.NoOfVisit} Discount={entry.Discount} VisitDate={entry.Date} Amount={entry.Amount} User={entry.FirstName} DoctorName={entry.DoctorName}/>)})}
-      <NewVisitEntry ReceiptID={ReceiptID} getVisitListDetails={getVisitListDetails}/>
+      {IPDDoctorVisitListDetails.map((entry, index) => {return(<VisitEntry AID={entry.AID} ReceiptCancel={ActiveStatus} ActiveStatus={entry.ActiveStatus} DeleteStatus={entry.DeleteStatus} Rate={entry.Rate} NoOfVisit={entry.NoOfVisit} Discount={entry.Discount} VisitDate={entry.Date} Amount={entry.Amount} User={entry.FirstName} DoctorName={entry.DoctorName} patientDetails={patientDetails}/>)})}
+      <NewVisitEntry ReceiptID={ReceiptID} getVisitListDetails={getVisitListDetails} patientDetails={patientDetails}/>
     </span>
   );
 };

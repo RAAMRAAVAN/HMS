@@ -13,7 +13,7 @@ export const MedicalServices = (props) => {
   const getMedicalServices = async (data) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchOtherServices",
+        "http://localhost:5000/fetchOtherServices",
         { IPAID: data }
       );
       setMedicalServices(response.data.otherServices);

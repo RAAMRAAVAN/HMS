@@ -15,7 +15,7 @@ export const AnesthesiaCharge = (props) => {
   let temp1 = 0;
   const fetchAnesthesiaCharge = async (data) => {
     try {
-      const response = await axios.post("http://192.168.1.32:5000/fetchAnesthesiaCharge", {
+      const response = await axios.post("http://localhost:5000/fetchAnesthesiaCharge", {
         OTID: data,
       });
       console.log("OT BIlls", response.data.AnesthesiaCharge);

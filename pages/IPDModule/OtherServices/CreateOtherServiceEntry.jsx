@@ -21,7 +21,7 @@ export const CreateOtherServiceEntry = (props) => {
     const CreateOtherService = async() => {
         setOpen(false);
         try{
-            let result = await axios.post('http://192.168.1.32:5000/CreateOtherService', {
+            let result = await axios.post('http://localhost:5000/CreateOtherService', {
                 ReceiptDate: date,
                 ReceiptTime: time,
                 IPDNo: IPDNo,
@@ -43,7 +43,7 @@ export const CreateOtherServiceEntry = (props) => {
     }
     const getServiceList = async() => {
       try{
-          let result = await axios.get("http://192.168.1.32:5000/getServiceList");
+          let result = await axios.get("http://localhost:5000/getServiceList");
           console.log(result.data.ServiceList);
           setServiceList(result.data.ServiceList)
       }catch(err){

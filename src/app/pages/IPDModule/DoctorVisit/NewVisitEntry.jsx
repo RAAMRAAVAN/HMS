@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export const NewVisitEntry = (props) => {
+    const {patientDetails} = props;
     let [ReceiptID, setReceiptID] = useState(props.ReceiptID);
     const getVisitListDetails = props.getVisitListDetails;
     let [VisitDate, setVisitDate] = useState(new Date().toISOString().split("T")[0]);
@@ -17,7 +18,7 @@ export const NewVisitEntry = (props) => {
 
     const getDoctorList = async() => {
         try{
-            let result = await axios.get("http://192.168.1.32:5000/getDoctorList");
+            let result = await axios.get("http://localhost:5000/getDoctorList");
             console.log(result.data.DoctorList);
             setDoctorList(result.data.DoctorList)
         }catch(err){
@@ -36,7 +37,7 @@ export const NewVisitEntry = (props) => {
     const AddDoctorVisit = async () => {
       console.log(ReceiptID,Doctor, NoOfVisit, Rate, Amount, Discount, '1');
       try{
-        let result = await axios.post('http://192.168.1.32:5000/AddDoctorVisit', {ReceiptID: ReceiptID, DrId: Doctor.DrId, Date: VisitDate, NoOfVisit: NoOfVisit, Rate: Rate, Discount: Discount, Amount: Amount});
+        let result = await axios.post('http://localhost:5000/AddDoctorVisit', {ReceiptID: ReceiptID, DrId: Doctor.DrId, Date: VisitDate, NoOfVisit: NoOfVisit, Rate: Rate, Discount: Discount, Amount: Amount});
         console.log("result=", result)
         getVisitListDetails();
         ResetValues();
@@ -185,7 +186,7 @@ export const NewVisitEntry = (props) => {
           display="flex"
           justifyContent="space-between"
         >
-          <Button fullWidth variant="contained" onClick={()=>{AddDoctorVisit()}}>Submit</Button>
+          <Button fullWidth variant="contained" onClick={()=>{AddDoctorVisit()}} disabled={patientDetails.Discharge==="Y"?true: false}>Submit</Button>
         </Grid>
       </Grid>
     </>)

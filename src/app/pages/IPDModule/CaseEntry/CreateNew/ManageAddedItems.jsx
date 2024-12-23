@@ -65,7 +65,7 @@ export const ManageAddedItems = (props) => {
 
   const CreateCaseEntry = async(printFlag) => {
     try{
-      let result = await axios.post("http://192.168.1.32:5000/createCaseEntry", {IPDID: IPDID, Rate: TotalRate, Discount: TotalDiscount, Amount: TotalAmount, NetAmount: TotalAmount - TotalDiscount, RecAmount: (paymentMethod === "CR")? 0: recAmount, date: date, time: time, UserID: UserID, UserName: UserName, Entries: Entries, paymentMethod: paymentMethod, bank: bank, trnID: trnID, Remark: remark});
+      let result = await axios.post("http://localhost:5000/createCaseEntry", {IPDID: IPDID, Rate: TotalRate, Discount: TotalDiscount, Amount: TotalAmount, NetAmount: TotalAmount - TotalDiscount, RecAmount: (paymentMethod === "CR")? 0: recAmount, date: date, time: time, UserID: UserID, UserName: UserName, Entries: Entries, paymentMethod: paymentMethod, bank: bank, trnID: trnID, Remark: remark});
       console.log("result=", result.data.result);
       if(result.data.result >= 1 ){
         dispatch(clearCaseEntries());

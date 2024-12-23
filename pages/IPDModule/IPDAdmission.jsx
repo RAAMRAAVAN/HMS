@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchbedStatus } from "../../redux";
 import { FinanceCompany, genderList, maritialStatusList, relationList, relegionList, titleList } from "../../Const/Const";
@@ -25,6 +25,7 @@ export const IPDAdmission = (props) => {
   console.log("Ward=", wardDetails);
   const [fetchedPatient, setFetchedPatient] = useState({});
   const IPDNo=useSelector(state=>state.ipdPatientReducer.IPDNo)
+  const hasFetchedAdmissionDetails = useRef(false);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [time, setTime] = useState(new Date().toTimeString().split(" ")[0]);
   const [opdPatient, setOpdPatient] = useState(true);
@@ -169,7 +170,7 @@ export const IPDAdmission = (props) => {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/admission_resources"
+        "http://localhost:5000/admission_resources"
       );
       console.log(response);
       setOccupationList(response.data.occupations);
@@ -190,7 +191,7 @@ export const IPDAdmission = (props) => {
   const getFilteredPatients = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/filtered_patient",
+        "http://localhost:5000/filtered_patient",
         {
           like_name: input,
         }
@@ -204,7 +205,7 @@ export const IPDAdmission = (props) => {
   const updateIPDAdmission = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/update-ipd-details",input
+        "http://localhost:5000/update-ipd-details",input
       );
       console.log("POST Result",response);
       if(response.data.UpdateStatus.rowsAffected[0] >= 1)
@@ -218,7 +219,7 @@ export const IPDAdmission = (props) => {
   const getIPDAdmissionDetails = async(input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDPatientDetails",
+        "http://localhost:5000/fetchIPDPatientDetails",
         {
           IPDNo: input,
         }
@@ -268,6 +269,7 @@ export const IPDAdmission = (props) => {
     }
   }
   useEffect(() => {
+    // hasFetchedAdmissionDetails.current = false;
     if (IPDNo!=null){
     getAdmissionResources();
     getIPDAdmissionDetails(IPDNo);
@@ -275,6 +277,7 @@ export const IPDAdmission = (props) => {
       console.log("fetch");
       dispatch(fetchbedStatus());
     }}
+    // hasFetchedAdmissionDetails.current = true;
   }, [IPDNo]);
 
   useEffect(() => {

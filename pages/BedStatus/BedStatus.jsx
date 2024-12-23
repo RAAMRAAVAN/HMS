@@ -16,7 +16,7 @@ export const BedStatus = () => {
   const fetchAdmissionDetails = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/getIPDAdmissionDetails"
+        "http://localhost:5000/getIPDAdmissionDetails"
       );
       // console.log("total",response.data.find(item => item.MOD === null).TotalRate);
       if (response != []) {

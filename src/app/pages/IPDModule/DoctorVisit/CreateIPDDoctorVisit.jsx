@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 
 export const CreateIPDDoctorVisit = (props) => {
-    let {open, setOpen, IPDNo, fetchIPDDoctorVisitList}=props;
+    let {open, setOpen, IPDNo, fetchIPDDoctorVisitList, patientDetails}=props;
     console.log("CreateIPDDoctorVisit=", open, IPDNo)
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const [time, setTime] = useState(new Date().toTimeString().slice(0, 5));
@@ -22,7 +22,7 @@ export const CreateIPDDoctorVisit = (props) => {
     const CreateIPDDoctorVisitList = async() => {
         setOpen(false);
         try{
-            let result = await axios.post('http://192.168.1.32:5000/CreateDoctorVisit', {
+            let result = await axios.post('http://localhost:5000/CreateDoctorVisit', {
                 ReceiptDate: date,
                 ReceiptTime: time,
                 IPDID: IPDNo,
@@ -43,7 +43,7 @@ export const CreateIPDDoctorVisit = (props) => {
     }
     const getDoctorList = async() => {
       try{
-          let result = await axios.get("http://192.168.1.32:5000/getDoctorList");
+          let result = await axios.get("http://localhost:5000/getDoctorList");
           console.log(result.data.DoctorList);
           setDoctorList(result.data.DoctorList)
       }catch(err){
@@ -195,7 +195,7 @@ export const CreateIPDDoctorVisit = (props) => {
         display="flex"
         justifyContent="space-between"
       >
-        <Button fullWidth variant="contained" onClick={()=>{CreateIPDDoctorVisitList()}}>Submit</Button>
+        <Button fullWidth variant="contained" onClick={()=>{CreateIPDDoctorVisitList()}} disabled={patientDetails.Discharge==="Y"?true: false}>Submit</Button>
       </Grid>
     </Grid></>)
 }

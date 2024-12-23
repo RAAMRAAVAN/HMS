@@ -19,7 +19,7 @@ export const NewCaseEntry = (props) => {
 
     const getServiceList = async() => {
         try{
-            let result = await axios.get("http://192.168.1.32:5000/getServiceList");
+            let result = await axios.get("http://localhost:5000/getServiceList");
             console.log(result.data.ServiceList);
             setServiceList(result.data.ServiceList)
         }catch(err){
@@ -39,7 +39,7 @@ export const NewCaseEntry = (props) => {
     const AddService = async () => {
       console.log(props.OSID,Service.SID, Qty, Rate, Amount, Discount, '1');
       try{
-        let result = await axios.post('http://192.168.1.32:5000/AddService', {OSID: props.OSID,SID: Service.SID, Qty: Qty, Rate: Rate, Amount: Amount, Discount: Discount, NetAmount: NetAmount,UserID: '1'});
+        let result = await axios.post('http://localhost:5000/AddService', {OSID: props.OSID,SID: Service.SID, Qty: Qty, Rate: Rate, Amount: Amount, Discount: Discount, NetAmount: NetAmount,UserID: '1'});
         console.log("result=", result)
         ResetValues();
         getServiceEntriesDetails();

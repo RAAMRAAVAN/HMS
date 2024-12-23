@@ -22,7 +22,7 @@ export const CreateIPDDoctorVisit = (props) => {
     const CreateIPDDoctorVisitList = async() => {
         setOpen(false);
         try{
-            let result = await axios.post('http://192.168.1.32:5000/CreateDoctorVisit', {
+            let result = await axios.post('http://localhost:5000/CreateDoctorVisit', {
                 ReceiptDate: date,
                 ReceiptTime: time,
                 IPDNo: IPDNo,
@@ -43,7 +43,7 @@ export const CreateIPDDoctorVisit = (props) => {
     }
     const getDoctorList = async() => {
       try{
-          let result = await axios.get("http://192.168.1.32:5000/getDoctorList");
+          let result = await axios.get("http://localhost:5000/getDoctorList");
           console.log(result.data.DoctorList);
           setDoctorList(result.data.DoctorList)
       }catch(err){

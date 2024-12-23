@@ -13,7 +13,7 @@ export const DoctorVisit = (props) => {
   const getDoctorVisits = async (data) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchDoctorVisits",
+        "http://localhost:5000/fetchDoctorVisits",
         { IPAID: data }
       );
       setDoctorVisits(response.data.doctorVisits);

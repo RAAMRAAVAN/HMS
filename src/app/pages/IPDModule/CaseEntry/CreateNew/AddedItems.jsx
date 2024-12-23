@@ -22,7 +22,7 @@ export const AddedItems = (props) => {
 
     const getServiceList = async (value) => {
         try {
-            let response = await axios.post("http://192.168.1.32:5000/filterServiceMaster", { like_name: value })
+            let response = await axios.post("http://localhost:5000/filterServiceMaster", { like_name: value })
             setServiceList(response.data.filtered_Service_list);
         } catch (err) {
             alert(err);

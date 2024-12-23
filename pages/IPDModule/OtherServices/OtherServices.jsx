@@ -58,7 +58,7 @@ export const OtherServices = (props) => {
     setOtherServicesList([])
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/OtherServicesList",
+        "http://localhost:5000/OtherServicesList",
         {
           IPDNo: input,
         }
@@ -73,7 +73,7 @@ export const OtherServices = (props) => {
   const deleteOtherServiceEntries = async (ReceiptID) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/deleteOtherServiceEntries",
+        "http://localhost:5000/deleteOtherServiceEntries",
         { ReceiptID: ReceiptID }
       );
       if (response.data.Status === true) {

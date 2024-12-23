@@ -17,8 +17,8 @@ export const BedStatus = (props) => {
   // const [loading, setLoading] = useState(false);
 
   const handleBedClick = async(bed) => {
-    setLoading("loading")
-    dispatch(assignIPDNo(bed.IPAID));
+    // setLoading("loading")
+    // dispatch(assignIPDNo(bed.IPAID));
     dispatch(assignselectedPatient({IPAID: bed.IPAID, HRNo: bed.IPDHRNo, PatientName: bed.PatientName, Date: bed.Date}));
     router.push('/pages/IPDModule');
     // setLoading(false)

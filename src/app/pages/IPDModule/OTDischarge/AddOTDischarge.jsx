@@ -49,7 +49,7 @@ export const AddOTDischarge = (props) => {
   const getMRDDetails = async (input) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDPatientDetails",
+        "http://localhost:5000/fetchIPDPatientDetails",
         { IPDNo: input }
       );
       console.log("money=", response.data[0]);
@@ -67,7 +67,7 @@ export const AddOTDischarge = (props) => {
   };
   const getOTDischargeFormats = async () => {
     try {
-      let result = await axios.get("http://192.168.1.32:5000/getOTDischargeFormats");
+      let result = await axios.get("http://localhost:5000/getOTDischargeFormats");
       setOtDischargeFormatList(result.data.OTDischargeFormats)
     } catch (err) {
       alert("DB Error");
@@ -76,7 +76,7 @@ export const AddOTDischarge = (props) => {
 
   const updateOTDischargeDate = async (printStatus) => {
     try {
-      let status = await axios.post("http://192.168.1.32:5000/updateOTDischargeDate", { Date: date, Time: time, AID: AID });
+      let status = await axios.post("http://localhost:5000/updateOTDischargeDate", { Date: date, Time: time, AID: AID });
       alert("Date Updated");
       if (printStatus === true)
         handlePrintClick();
@@ -87,7 +87,7 @@ export const AddOTDischarge = (props) => {
 
   useEffect(() => {
     if (open) {
-      getMRDDetails(IPDID);
+      // getMRDDetails(IPDID);
       getOTDischargeFormats();
       dispatch(assignValue(props.selectedFormat.Format[1]))
     }

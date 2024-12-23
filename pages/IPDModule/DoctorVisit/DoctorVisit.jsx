@@ -58,7 +58,7 @@ export const DoctorVisit = (props) => {
     setIPDDoctorVisitList([])
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/fetchIPDDoctorVisitList",
+        "http://localhost:5000/fetchIPDDoctorVisitList",
         {
           IPDNo: input,
         }
@@ -73,7 +73,7 @@ export const DoctorVisit = (props) => {
   const deleteIPDMoneyReceipt = async (ReceiptID) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.32:5000/deleteIPDMoneyReceipt",
+        "http://localhost:5000/deleteIPDMoneyReceipt",
         { ReceiptID: ReceiptID }
       );
       if (response.data.Status === true) {

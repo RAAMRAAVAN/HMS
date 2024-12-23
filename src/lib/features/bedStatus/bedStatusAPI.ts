@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Define the base URL for the API
-const API_BASE_URL = "http://192.168.1.32:5000/getWardCollection"; // Replace with your actual API base URL
+const API_BASE_URL = "http://localhost:5000/getWardCollection"; // Replace with your actual API base URL
 
 // Define the function to fetch bed status based on the provided amount
 export const bedStatus = async (amount: number) => {
