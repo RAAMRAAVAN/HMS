@@ -31,7 +31,7 @@ export const LeftDrawer = () => {
     { text: 'IPD List', route: '/ipd-list' },
     { text: 'OT Module', route: '/ot' },
     { text: 'LAB Module', route: '/lab' },
-    { text: 'Pharmacy Module', route: '/pharmacy' },
+    { text: 'Pharmacy Module', route: '/pages/PharmacyModule' },
     { text: 'Nurse Module', route: '/nurse' },
     { text: 'HR Module', route: '/hr' },
     { text: 'Cafeteria Module', route: '/cafeteria' },
